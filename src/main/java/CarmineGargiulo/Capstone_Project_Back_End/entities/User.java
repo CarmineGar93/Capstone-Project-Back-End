@@ -1,6 +1,7 @@
 package CarmineGargiulo.Capstone_Project_Back_End.entities;
 
 import CarmineGargiulo.Capstone_Project_Back_End.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name = "users")
+@JsonIgnoreProperties({"accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities",
+        "password", "weeklyPlans"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -30,6 +33,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<WeeklyPlan> weeklyPlans;
 
     public User(String name, String surname, String email, String password) {
         this.name = name;
