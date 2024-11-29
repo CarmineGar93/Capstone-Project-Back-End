@@ -27,9 +27,11 @@ public class CheckerFilter extends OncePerRequestFilter {
     private UsersService usersService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String autHeader = request.getHeader("Authorization");
-        if(autHeader == null || !autHeader.startsWith("Bearer ")) throw new UnauthorizedException("Authorization header missing or it's format is invalid");
+        if (autHeader == null || !autHeader.startsWith("Bearer "))
+            throw new UnauthorizedException("Authorization header missing or format invalid");
         String token = autHeader.replace("Bearer ", "");
         jwt.verifyToken(token);
         User logged = usersService.getUserById(Long.parseLong(jwt.extractUserIdFromToken(token)));

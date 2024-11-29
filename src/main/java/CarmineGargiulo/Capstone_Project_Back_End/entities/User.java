@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @Table(name = "users")
 @JsonIgnoreProperties({"accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities",
-        "password", "weeklyPlans"})
+        "password", "weeklyPlans", "username"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -42,7 +42,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.avatarUrl = "https://ui-avatars.com/api/?name=" +
-        name + "+" + surname;
+                name + "+" + surname;
         this.role = Role.USER;
     }
 

@@ -2,6 +2,7 @@ package CarmineGargiulo.Capstone_Project_Back_End.controllers;
 
 import CarmineGargiulo.Capstone_Project_Back_End.dto.UserDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.dto.UserLoginDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.dto.UserLoginTokenResponseDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
 import CarmineGargiulo.Capstone_Project_Back_End.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +21,20 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@RequestBody @Validated UserDTO body, BindingResult bindingResult){
+    public UserLoginTokenResponseDTO registerUser(@RequestBody @Validated UserDTO body, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             String message = bindingResult.getAllErrors().stream().map(e->e.getDefaultMessage()).collect(Collectors.joining(", "));
             throw new BadRequestException(message);
         }
-        return authService.register(body);
+        return new UserLoginTokenResponseDTO(authService.register(body));
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody @Validated UserLoginDTO body, BindingResult bindingResult){
+    public UserLoginTokenResponseDTO loginUser(@RequestBody @Validated UserLoginDTO body, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             String message = bindingResult.getAllErrors().stream().map(e->e.getDefaultMessage()).collect(Collectors.joining(", "));
             throw new BadRequestException(message);
         }
-        return authService.generateToken(body);
+        return new UserLoginTokenResponseDTO(authService.generateToken(body));
     }
 }
