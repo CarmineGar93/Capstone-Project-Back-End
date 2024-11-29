@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,6 +29,8 @@ public class WeeklyPlan {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany(mappedBy = "weeklyPlan")
+    private List<DailyPlan> dailyPlans;
 
     public WeeklyPlan(LocalDate startDate, LocalDate endDate, User user) {
         this.startDate = startDate;
