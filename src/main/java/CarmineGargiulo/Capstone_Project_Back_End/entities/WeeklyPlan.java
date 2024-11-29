@@ -25,6 +25,7 @@ public class WeeklyPlan {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PlanStatus status;
     @ManyToOne
     @JoinColumn(name = "user_id")

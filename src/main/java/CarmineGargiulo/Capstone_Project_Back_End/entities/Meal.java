@@ -20,6 +20,7 @@ public class Meal {
     @Column(name = "meal_id")
     private long mealId;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MealType type;
     @ManyToOne
     @JoinColumn(name = "daily_plan_id", nullable = false)
@@ -31,5 +32,14 @@ public class Meal {
     public Meal(MealType type, DailyPlan dailyPlan) {
         this.type = type;
         this.dailyPlan = dailyPlan;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        if(this.recipe == null) {
+            this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() + recipe.getCalories());
+        } else {
+            this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() - this.recipe.getCalories() + recipe.getCalories());
+        }
+        this.recipe = recipe;
     }
 }

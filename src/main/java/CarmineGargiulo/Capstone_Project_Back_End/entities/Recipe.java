@@ -26,14 +26,17 @@ public class Recipe {
     private String imageUrl;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private double calories;
     @OneToMany(mappedBy = "recipe")
     private List<Ingredient> ingredientList;
     @OneToMany(mappedBy = "recipe")
     private List<Meal> meals;
 
-    public Recipe(long reference, String imageUrl, String name) {
+    public Recipe(long reference, String imageUrl, String name, double calories) {
         this.reference = reference;
         this.imageUrl = imageUrl;
         this.name = name;
+        this.calories = calories;
     }
 }
