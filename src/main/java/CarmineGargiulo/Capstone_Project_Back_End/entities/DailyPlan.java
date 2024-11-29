@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Data
 @Entity
@@ -25,6 +27,8 @@ public class DailyPlan {
     @ManyToOne
     @JoinColumn(name = "week_plan_id")
     private WeeklyPlan weeklyPlan;
+    @OneToMany(mappedBy = "dailyPlan")
+    private List<Meal> meals;
 
     public DailyPlan(short day, WeeklyPlan weeklyPlan) {
         this.day = day;

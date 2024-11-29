@@ -1,5 +1,6 @@
 package CarmineGargiulo.Capstone_Project_Back_End.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 @Table(name = "ingredients")
+@JsonIgnoreProperties({"recipe"})
 public class Ingredient {
     @Id
     @GeneratedValue

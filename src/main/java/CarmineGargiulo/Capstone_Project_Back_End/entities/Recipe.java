@@ -1,5 +1,6 @@
 package CarmineGargiulo.Capstone_Project_Back_End.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name = "recipes")
+@JsonIgnoreProperties({"meals"})
 public class Recipe {
     @Id
     @GeneratedValue
@@ -26,6 +28,8 @@ public class Recipe {
     private String name;
     @OneToMany(mappedBy = "recipe")
     private List<Ingredient> ingredientList;
+    @OneToMany(mappedBy = "recipe")
+    private List<Meal> meals;
 
     public Recipe(long reference, String imageUrl, String name) {
         this.reference = reference;
