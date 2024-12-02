@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
-@JsonIgnoreProperties({"ingredienList"})
+@JsonIgnoreProperties({"ingredientList"})
 public class Product {
     @Id
     @GeneratedValue

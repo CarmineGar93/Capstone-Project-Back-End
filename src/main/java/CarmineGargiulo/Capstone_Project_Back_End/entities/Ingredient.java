@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Data
 @Table(name = "ingredients")
-@JsonIgnoreProperties({"recipe"})
+@JsonIgnoreProperties({"recipeList"})
 public class Ingredient {
     @Id
     @GeneratedValue
@@ -25,14 +27,12 @@ public class Ingredient {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
+    @ManyToMany(mappedBy = "ingredientList")
+    private List<Recipe> recipeList;
 
-    public Ingredient(double qty, String unit, Product product, Recipe recipe) {
+    public Ingredient(double qty, String unit, Product product) {
         this.qty = qty;
         this.unit = unit;
         this.product = product;
-        this.recipe = recipe;
     }
 }

@@ -28,7 +28,9 @@ public class Recipe {
     private String name;
     @Column(nullable = false)
     private double calories;
-    @OneToMany(mappedBy = "recipe")
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns =
+    @JoinColumn(name = "ingredient_id"), name = "recipes_ingredients")
     private List<Ingredient> ingredientList;
     @OneToMany(mappedBy = "recipe")
     private List<Meal> meals;
