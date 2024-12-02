@@ -37,7 +37,7 @@ public class WeeklyPlan {
         this.startDate = startDate;
         this.endDate = endDate;
         this.user = user;
-        if(startDate.isBefore(LocalDate.now())) this.status = PlanStatus.ACTIVE;
+        if (startDate.isBefore(LocalDate.now()) || startDate.isEqual(LocalDate.now())) this.status = PlanStatus.ACTIVE;
         else this.status = PlanStatus.IN_PROGRAM;
     }
 }
