@@ -43,11 +43,17 @@ public class RecipesService {
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredients.toList().stream().forEach(o -> {
             long ingredientId = ((JSONObject) o).getLong("id");
-            long ingredientAmount = ((JSONObject) o).getLong("amount");
-            String unit = ((JSONObject) o).getString("unit");
-            Product product = productsService.getProductByReference(ingredientId, (JSONObject) o);
-            Ingredient ingredient = ingredientsService.getIngredientByProductAndQty(product, ingredientAmount, unit);
-            ingredientList.add(ingredient);
+            if (ingredientId == -1) {
+
+            } else {
+                double ingredientAmount = ((JSONObject) o).getDouble("amount");
+                String unit = ((JSONObject) o).getString("unit");
+                Product product = productsService.getProductByReference(ingredientId, (JSONObject) o);
+                Ingredient ingredient = ingredientsService.getIngredientByProductAndQty(product, ingredientAmount,
+                        unit);
+                ingredientList.add(ingredient);
+            }
+
         });
         recipe.setIngredientList(ingredientList);
         return recipesRepository.save(recipe);

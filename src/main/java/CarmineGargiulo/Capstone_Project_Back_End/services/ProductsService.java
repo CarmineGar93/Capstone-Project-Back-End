@@ -17,7 +17,7 @@ public class ProductsService {
 
     public Product saveProductByJson(long reference, JSONObject productObj) {
         String productImg = "https://img.spoonacular.com/ingredients_250x250/" + productObj.getString("image");
-        String productName = productObj.getString("name");
+        String productName = productObj.getString("nameClean");
         return productsRepository.save(new Product(reference, productImg, productName));
     }
 }
