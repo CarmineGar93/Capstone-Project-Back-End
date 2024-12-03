@@ -28,6 +28,7 @@ public class DailyPlan {
     @JoinColumn(name = "week_plan_id")
     private WeeklyPlan weeklyPlan;
     @OneToMany(mappedBy = "dailyPlan")
+    @OrderBy("mealId")
     private List<Meal> meals;
 
     public DailyPlan(short day, WeeklyPlan weeklyPlan) {

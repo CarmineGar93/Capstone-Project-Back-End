@@ -35,7 +35,7 @@ public class Meal {
     }
 
     public void setRecipe(Recipe recipe) {
-        if(this.recipe == null) {
+        if (this.recipe == null) {
             this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() + recipe.getCalories());
         } else {
             this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() - this.recipe.getCalories() + recipe.getCalories());

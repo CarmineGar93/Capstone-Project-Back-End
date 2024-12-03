@@ -51,7 +51,7 @@ public class WeeklyPlansService {
         }
         List<DailyPlan> planListSaved = dailyPlansService.saveManyPlans(planList);
         List<Meal> meals = new ArrayList<>();
-        List<MealType> mealTypes = List.of(MealType.DINNER, MealType.LUNCH, MealType.BREAKFAST);
+        List<MealType> mealTypes = List.of(MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER);
         planListSaved.forEach(dailyPlan -> {
             mealTypes.forEach(mealType -> meals.add(new Meal(mealType, dailyPlan)));
         });

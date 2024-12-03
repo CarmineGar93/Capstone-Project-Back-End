@@ -1,8 +1,10 @@
 package CarmineGargiulo.Capstone_Project_Back_End.services;
 
+import CarmineGargiulo.Capstone_Project_Back_End.dto.RecipeResponseDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.Ingredient;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.Product;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.Recipe;
+import CarmineGargiulo.Capstone_Project_Back_End.exceptions.NotFoundException;
 import CarmineGargiulo.Capstone_Project_Back_End.repositories.RecipesRepository;
 import CarmineGargiulo.Capstone_Project_Back_End.tools.SpoonacularSender;
 import kong.unirest.core.json.JSONArray;
@@ -43,9 +45,7 @@ public class RecipesService {
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredients.toList().stream().forEach(o -> {
             long ingredientId = ((JSONObject) o).getLong("id");
-            if (ingredientId == -1) {
-
-            } else {
+            if (ingredientId != -1) {
                 double ingredientAmount = ((JSONObject) o).getDouble("amount");
                 String unit = ((JSONObject) o).getString("unit");
                 Product product = productsService.getProductByReference(ingredientId, (JSONObject) o);
@@ -53,10 +53,23 @@ public class RecipesService {
                         unit);
                 ingredientList.add(ingredient);
             }
-
         });
         recipe.setIngredientList(ingredientList);
         return recipesRepository.save(recipe);
+    }
+
+    public List<RecipeResponseDTO> getRecipesByQuery(String query) {
+        JSONObject response = spoonacularSender.getRecipesByQuery(query);
+        JSONArray results = response.getJSONArray("results");
+        if (results.isEmpty()) throw new NotFoundException("Recipe not founded");
+        List<RecipeResponseDTO> recipes = new ArrayList<>();
+        results.toList().stream().forEach(o -> {
+            long reference = ((JSONObject) o).getLong("id");
+            String title = ((JSONObject) o).getString("title");
+            String image = ((JSONObject) o).getString("image");
+            recipes.add(new RecipeResponseDTO(reference, title, image));
+        });
+        return recipes;
     }
 
 

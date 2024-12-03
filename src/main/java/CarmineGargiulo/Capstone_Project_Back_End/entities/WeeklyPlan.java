@@ -31,6 +31,7 @@ public class WeeklyPlan {
     @JoinColumn(name = "user_id")
     private User user;
     @OneToMany(mappedBy = "weeklyPlan")
+    @OrderBy("day")
     private List<DailyPlan> dailyPlans;
 
     public WeeklyPlan(LocalDate startDate, LocalDate endDate, User user) {

@@ -23,4 +23,13 @@ public class SpoonacularSender {
                 .asJson();
         return response.getBody().getObject();
     }
+
+    public JSONObject getRecipesByQuery(String query) {
+        HttpResponse<JsonNode> response = Unirest.get("https://api.spoonacular.com/recipes/complexSearch")
+                .queryString("query", query)
+                .queryString("number", 100)
+                .header("x-api-key", this.apiKey)
+                .asJson();
+        return response.getBody().getObject();
+    }
 }
