@@ -6,7 +6,9 @@ import CarmineGargiulo.Capstone_Project_Back_End.entities.Meal;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.User;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.WeeklyPlan;
 import CarmineGargiulo.Capstone_Project_Back_End.enums.MealType;
+import CarmineGargiulo.Capstone_Project_Back_End.enums.PlanStatus;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
+import CarmineGargiulo.Capstone_Project_Back_End.exceptions.NotFoundException;
 import CarmineGargiulo.Capstone_Project_Back_End.repositories.WeeklyPlansRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,6 +59,10 @@ public class WeeklyPlansService {
         });
         mealsService.saveManyMeals(meals);
         return savedPlan;
+    }
+
+    public WeeklyPlan getActivePlan(User logged) {
+        return weeklyPlansRepository.findByUserAndStatus(logged, PlanStatus.ACTIVE).orElseThrow(() -> new NotFoundException("You don't have any active plan"));
     }
 
 

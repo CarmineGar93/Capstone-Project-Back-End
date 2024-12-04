@@ -28,6 +28,11 @@ public class WeeklyPlansController {
         return weeklyPlansService.getAllUserWeeklyPlans(logged, page, size, sortBy);
     }
 
+    @GetMapping("/myplans/active")
+    public WeeklyPlan getActiveWeeklyPlan(@AuthenticationPrincipal User logged) {
+        return weeklyPlansService.getActivePlan(logged);
+    }
+
     @PostMapping("/myplans")
     public WeeklyPlan savePlan(@AuthenticationPrincipal User logged, @RequestBody @Validated WeeklyPlanDTO body,
                                BindingResult bindingResult) {
