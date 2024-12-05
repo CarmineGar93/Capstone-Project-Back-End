@@ -26,6 +26,8 @@ public class Recipe {
     private String imageUrl;
     @Column(nullable = false)
     private String name;
+    @Column(name = "ready_in", nullable = false)
+    private int readyIn;
     @Column(nullable = false)
     private double calories;
     @ManyToMany
@@ -35,10 +37,12 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe")
     private List<Meal> meals;
 
-    public Recipe(long reference, String imageUrl, String name, double calories) {
+
+    public Recipe(long reference, String imageUrl, String name, double calories, int readyIn) {
         this.reference = reference;
         this.imageUrl = imageUrl;
         this.name = name;
         this.calories = calories;
+        this.readyIn = readyIn;
     }
 }

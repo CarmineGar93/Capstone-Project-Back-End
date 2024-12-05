@@ -37,20 +37,77 @@ public class RecipesService {
         JSONObject myObj = spoonacularSender.getRecipeInfo(reference);
         String recipeImg = myObj.getString("image");
         String recipeName = myObj.getString("title");
+        int readyIn;
+        try {
+            readyIn = myObj.getInt("readyInMinutes");
+        } catch (Exception e) {
+            readyIn = 0;
+        }
         JSONObject nutritionObj = myObj.getJSONObject("nutrition");
         JSONArray nutrientsArray = nutritionObj.getJSONArray("nutrients");
         double calories = nutrientsArray.getJSONObject(0).getDouble("amount");
-        Recipe recipe = new Recipe(reference, recipeImg, recipeName, calories);
+        Recipe recipe = new Recipe(reference, recipeImg, recipeName, calories, readyIn);
         JSONArray ingredients = myObj.getJSONArray("extendedIngredients");
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredients.toList().stream().forEach(o -> {
             long ingredientId = ((JSONObject) o).getLong("id");
             if (ingredientId != -1) {
-                double ingredientAmount = ((JSONObject) o).getDouble("amount");
-                String unit = ((JSONObject) o).getString("unit");
+                JSONObject metricUnit = ((JSONObject) o).getJSONObject("measures").getJSONObject("metric");
+                double ingredientAmount = metricUnit.getDouble("amount");
+                String unit = metricUnit.getString("unitLong").toLowerCase();
+                String unitToUse;
+                switch (unit) {
+                    case "tbsps":
+                    case "tablespoon":
+                    case "tablespoons":
+                    case "tbsp":
+                        unitToUse = "teaspoons";
+                        ingredientAmount *= 3;
+                        break;
+                    case "dash":
+                        unitToUse = "teaspoons";
+                        ingredientAmount /= 8;
+                        break;
+                    case "teaspoon":
+                        unitToUse = "teaspoons";
+                        break;
+                    case "pinch":
+                    case "pinches":
+                        unitToUse = "teaspoons";
+                        ingredientAmount /= 16;
+                        break;
+                    case "serving":
+                    case "servings":
+                        unitToUse = "to taste";
+                        ingredientAmount = 0;
+                        break;
+                    case "small":
+                    case "smalls":
+                        unitToUse = "pieces";
+                        ingredientAmount *= 0.5;
+                        break;
+                    case "large":
+                    case "larges":
+                        unitToUse = "pieces";
+                        ingredientAmount *= 1.5;
+                        break;
+                    case "cloves":
+                        unitToUse = "pieces";
+                        ingredientAmount /= 10;
+                        break;
+                    case "":
+                    case "mediums":
+                    case "medium":
+                    case "stalk":
+                    case "stalks":
+                        unitToUse = "pieces";
+                        break;
+                    default:
+                        unitToUse = unit;
+                }
                 Product product = productsService.getProductByReference(ingredientId, (JSONObject) o);
                 Ingredient ingredient = ingredientsService.getIngredientByProductAndQty(product, ingredientAmount,
-                        unit);
+                        unitToUse);
                 ingredientList.add(ingredient);
             }
         });

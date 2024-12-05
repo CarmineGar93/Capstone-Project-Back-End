@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Entity
 @Data
@@ -20,6 +21,8 @@ public class WeeklyPlan {
     @Setter(AccessLevel.NONE)
     @Column(name = "weekly_plan_id")
     private long weeklyPlanId;
+    @Column(name = "avg_daily_calories", nullable = false)
+    private double avgDailyCalories;
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
     @Column(name = "end_date", nullable = false)
@@ -38,7 +41,13 @@ public class WeeklyPlan {
         this.startDate = startDate;
         this.endDate = endDate;
         this.user = user;
+        this.avgDailyCalories = 0;
         if (startDate.isBefore(LocalDate.now()) || startDate.isEqual(LocalDate.now())) this.status = PlanStatus.ACTIVE;
         else this.status = PlanStatus.IN_PROGRAM;
+    }
+
+    public void calculateAvgDailyCalories() {
+        OptionalDouble avg = this.dailyPlans.stream().mapToDouble(DailyPlan::getTotCalories).average();
+        if (avg.isPresent()) this.avgDailyCalories = avg.getAsDouble();
     }
 }

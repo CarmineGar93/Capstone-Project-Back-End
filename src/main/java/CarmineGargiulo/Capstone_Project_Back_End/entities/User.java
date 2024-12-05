@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class User implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<WeeklyPlan> weeklyPlans;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "recipe_id"),
+            name = "user_favourite_recipes")
+    @Setter(AccessLevel.NONE)
+    private List<Recipe> favouriteRecipes;
 
     public User(String name, String surname, String email, String password) {
         this.name = name;
@@ -44,6 +50,15 @@ public class User implements UserDetails {
         this.avatarUrl = "https://ui-avatars.com/api/?name=" +
                 name + "+" + surname;
         this.role = Role.USER;
+        this.favouriteRecipes = new ArrayList<>();
+    }
+
+    public void addFavourite(Recipe recipe) {
+        this.favouriteRecipes.add(recipe);
+    }
+
+    public boolean removeFavourite(long reference) {
+        return this.favouriteRecipes.removeIf(recipe1 -> recipe1.getReference() == reference);
     }
 
     @Override

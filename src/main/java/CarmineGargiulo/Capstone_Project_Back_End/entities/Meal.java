@@ -40,6 +40,7 @@ public class Meal {
         } else {
             this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() - this.recipe.getCalories() + recipe.getCalories());
         }
+        this.dailyPlan.getWeeklyPlan().calculateAvgDailyCalories();
         this.recipe = recipe;
     }
 }
