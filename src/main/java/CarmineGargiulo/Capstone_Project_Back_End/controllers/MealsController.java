@@ -1,6 +1,6 @@
 package CarmineGargiulo.Capstone_Project_Back_End.controllers;
 
-import CarmineGargiulo.Capstone_Project_Back_End.dto.UpdateMealsRecipeDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.dto.ReferenceRecipeDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.User;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
 import CarmineGargiulo.Capstone_Project_Back_End.services.MealsService;
@@ -20,7 +20,7 @@ public class MealsController {
 
     @PatchMapping("/{mealId}")
     public void addRecipe(@AuthenticationPrincipal User logged, @PathVariable long mealId,
-                          @RequestBody @Validated UpdateMealsRecipeDTO body, BindingResult bindingResult) {
+                          @RequestBody @Validated ReferenceRecipeDTO body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String message =
                     bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.joining(

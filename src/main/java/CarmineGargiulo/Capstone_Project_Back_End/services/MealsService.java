@@ -1,6 +1,6 @@
 package CarmineGargiulo.Capstone_Project_Back_End.services;
 
-import CarmineGargiulo.Capstone_Project_Back_End.dto.UpdateMealsRecipeDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.dto.ReferenceRecipeDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.Meal;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.Recipe;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.User;
@@ -32,7 +32,7 @@ public class MealsService {
                 "not found"));
     }
 
-    public void addRecipeToMeal(long mealId, UpdateMealsRecipeDTO body, User logged) {
+    public void addRecipeToMeal(long mealId, ReferenceRecipeDTO body, User logged) {
         Meal meal = getMealById(mealId);
         if (meal.getDailyPlan().getWeeklyPlan().getUser().getUserId() != logged.getUserId())
             throw new AuthorizationDeniedException("You don't have access to modify this meal");

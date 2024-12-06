@@ -30,7 +30,7 @@ public class Recipe {
     private int readyIn;
     @Column(nullable = false)
     private double calories;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns =
     @JoinColumn(name = "ingredient_id"), name = "recipes_ingredients")
     private List<Ingredient> ingredientList;

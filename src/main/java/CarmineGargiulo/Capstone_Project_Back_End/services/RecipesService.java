@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -33,8 +34,16 @@ public class RecipesService {
         return recipesRepository.findByReference(reference).orElseGet(() -> saveRecipeByReference(reference));
     }
 
+    public HashMap getRecipeInfo(long reference) {
+        return spoonacularSender.getRecipeInfo(reference);
+    }
+
+    public HashMap getRandomRecipes() {
+        return spoonacularSender.getRandomRecipes();
+    }
+
     public Recipe saveRecipeByReference(long reference) {
-        JSONObject myObj = spoonacularSender.getRecipeInfo(reference);
+        JSONObject myObj = spoonacularSender.getRecipeByReference(reference);
         String recipeImg = myObj.getString("image");
         String recipeName = myObj.getString("title");
         int readyIn;

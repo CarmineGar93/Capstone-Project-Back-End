@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @Table(name = "users")
 @JsonIgnoreProperties({"accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities",
-        "password", "weeklyPlans", "username"})
+        "password", "weeklyPlans", "username", "favouriteRecipes"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue

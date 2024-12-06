@@ -1,6 +1,9 @@
 package CarmineGargiulo.Capstone_Project_Back_End.services;
 
+import CarmineGargiulo.Capstone_Project_Back_End.dto.ErrorResponseDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.dto.ReferenceRecipeDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.dto.UserDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.entities.Recipe;
 import CarmineGargiulo.Capstone_Project_Back_End.entities.User;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.NotFoundException;
@@ -13,31 +16,52 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
+
     @Autowired
     private PasswordEncoder bcrypt;
 
-    public Page<User> getAllUsers(int page, int size, String sortBy){
+    @Autowired
+    private RecipesService recipesService;
+
+    public Page<User> getAllUsers(int page, int size, String sortBy) {
         if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return usersRepository.findAll(pageable);
     }
 
-    public User getUserById(long userId){
-        return usersRepository.findById(userId).orElseThrow(()->new NotFoundException("User with id " + userId + " not found"));
+    public User getUserById(long userId) {
+        return usersRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " " +
+                "not found"));
     }
 
-    public User getUserByEmail(String email){
-        return usersRepository.findByEmail(email).orElseThrow(()->new NotFoundException("User with email " + email + " not found"));
+    public User getUserByEmail(String email) {
+        return usersRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
     }
 
-    public User saveUser(UserDTO body){
-        if(usersRepository.existsByEmail(body.email())) throw new BadRequestException("Email " + body.email() + " already in use");
+    public User saveUser(UserDTO body) {
+        if (usersRepository.existsByEmail(body.email()))
+            throw new BadRequestException("Email " + body.email() + " already in use");
         User user = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()));
         return usersRepository.save(user);
     }
 
+    public ErrorResponseDTO addOrRemoveFavourite(ReferenceRecipeDTO body, User logged) {
+        String result;
+        if (logged.getFavouriteRecipes().stream().anyMatch(recipe -> recipe.getReference() == body.reference())) {
+            logged.removeFavourite(body.reference());
+            result = "Removed";
+        } else {
+            Recipe recipe = recipesService.getRecipeByReference(body.reference());
+            logged.addFavourite(recipe);
+            result = "Added";
+        }
+        usersRepository.save(logged);
+        return new ErrorResponseDTO(result, LocalDateTime.now());
+    }
 }
