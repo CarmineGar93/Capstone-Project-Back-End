@@ -33,6 +33,11 @@ public class WeeklyPlansController {
         return weeklyPlansService.getActivePlan(logged);
     }
 
+    @PatchMapping("/myplans")
+    public void updatePlansStatus(@AuthenticationPrincipal User logged) {
+        weeklyPlansService.updatePlansStatus(logged);
+    }
+
     @PostMapping("/myplans")
     public WeeklyPlan savePlan(@AuthenticationPrincipal User logged, @RequestBody @Validated WeeklyPlanDTO body,
                                BindingResult bindingResult) {

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WeeklyPlansService {
@@ -63,6 +64,26 @@ public class WeeklyPlansService {
 
     public WeeklyPlan getActivePlan(User logged) {
         return weeklyPlansRepository.findByUserAndStatus(logged, PlanStatus.ACTIVE).orElseThrow(() -> new NotFoundException("You don't have any active plan"));
+    }
+
+    public void updatePlansStatus(User logged) {
+        Optional<WeeklyPlan> active = weeklyPlansRepository.findByUserAndStatus(logged, PlanStatus.ACTIVE);
+        if (active.isPresent()) {
+            WeeklyPlan prevActive = active.get();
+            if (prevActive.getEndDate().isBefore(LocalDate.now())) {
+                prevActive.setStatus(PlanStatus.EXPIRED);
+                weeklyPlansRepository.save(prevActive);
+            }
+
+        }
+        Optional<WeeklyPlan> inProgram = weeklyPlansRepository.findByUserAndStatus(logged, PlanStatus.IN_PROGRAM);
+        if (inProgram.isPresent()) {
+            WeeklyPlan prevInProgram = inProgram.get();
+            if (prevInProgram.getStartDate().isEqual(LocalDate.now()) || prevInProgram.getStartDate().isBefore(LocalDate.now())) {
+                prevInProgram.setStatus(PlanStatus.ACTIVE);
+                weeklyPlansRepository.save(prevInProgram);
+            }
+        }
     }
 
 
