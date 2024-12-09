@@ -18,7 +18,7 @@ public class MealsController {
     @Autowired
     private MealsService mealsService;
 
-    @PatchMapping("/{mealId}")
+    @PatchMapping("/{mealId}/add")
     public void addRecipe(@AuthenticationPrincipal User logged, @PathVariable long mealId,
                           @RequestBody @Validated ReferenceRecipeDTO body, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -28,5 +28,10 @@ public class MealsController {
             throw new BadRequestException(message);
         }
         mealsService.addRecipeToMeal(mealId, body, logged);
+    }
+
+    @PatchMapping("/{mealId}/remove")
+    public void removeRecipe(@AuthenticationPrincipal User logged, @PathVariable long mealId) {
+        mealsService.removeRecipeFromMeal(mealId, logged);
     }
 }

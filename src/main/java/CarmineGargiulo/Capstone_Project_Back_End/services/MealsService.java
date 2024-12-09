@@ -38,9 +38,22 @@ public class MealsService {
             throw new AuthorizationDeniedException("You don't have access to modify this meal");
         LocalDate mealDate = meal.getDailyPlan().getWeeklyPlan().getStartDate().plusDays(meal.getDailyPlan().getDay());
         if (mealDate.isBefore(LocalDate.now()))
-            throw new BadRequestException("You cannot change or add a recipe to a past day");
+            throw new BadRequestException("You cannot add a recipe to a past day");
         Recipe recipeToAdd = recipesService.getRecipeByReference(body.reference());
-        meal.setRecipe(recipeToAdd);
+        if (meal.getRecipe() != null) throw new BadRequestException("Meal has already a recipe");
+        meal.addRecipe(recipeToAdd);
+        mealsRepository.save(meal);
+    }
+
+    public void removeRecipeFromMeal(long mealId, User logged) {
+        Meal meal = getMealById(mealId);
+        if (meal.getDailyPlan().getWeeklyPlan().getUser().getUserId() != logged.getUserId())
+            throw new AuthorizationDeniedException("You don't have access to modify this meal");
+        LocalDate mealDate = meal.getDailyPlan().getWeeklyPlan().getStartDate().plusDays(meal.getDailyPlan().getDay());
+        if (mealDate.isBefore(LocalDate.now()))
+            throw new BadRequestException("You cannot remove a recipe to a past day");
+        if (meal.getRecipe() == null) throw new BadRequestException("Meal has no recipe associated");
+        meal.removeRecipe();
         mealsRepository.save(meal);
     }
 }

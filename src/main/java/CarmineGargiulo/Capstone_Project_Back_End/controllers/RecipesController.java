@@ -3,6 +3,7 @@ package CarmineGargiulo.Capstone_Project_Back_End.controllers;
 import CarmineGargiulo.Capstone_Project_Back_End.dto.RecipeResponseDTO;
 import CarmineGargiulo.Capstone_Project_Back_End.services.RecipesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,5 +28,11 @@ public class RecipesController {
     @GetMapping("/random")
     public HashMap getRandomRecipes() {
         return recipesService.getRandomRecipes();
+    }
+
+    @PatchMapping("/{recipeId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void resetIngredients(@PathVariable long recipeId) {
+        recipesService.resetIngredients(recipeId);
     }
 }

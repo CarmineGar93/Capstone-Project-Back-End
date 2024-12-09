@@ -27,6 +27,7 @@ public class Meal {
     private DailyPlan dailyPlan;
     @ManyToOne
     @JoinColumn(name = "recipe_id")
+    @Setter(AccessLevel.NONE)
     private Recipe recipe;
 
     public Meal(MealType type, DailyPlan dailyPlan) {
@@ -34,13 +35,15 @@ public class Meal {
         this.dailyPlan = dailyPlan;
     }
 
-    public void setRecipe(Recipe recipe) {
-        if (this.recipe == null) {
-            this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() + recipe.getCalories());
-        } else {
-            this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() - this.recipe.getCalories() + recipe.getCalories());
-        }
+    public void addRecipe(Recipe recipe) {
+        this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() + recipe.getCalories());
         this.dailyPlan.getWeeklyPlan().calculateAvgDailyCalories();
         this.recipe = recipe;
+    }
+
+    public void removeRecipe() {
+        this.dailyPlan.setTotCalories(this.dailyPlan.getTotCalories() - this.recipe.getCalories());
+        this.dailyPlan.getWeeklyPlan().calculateAvgDailyCalories();
+        this.recipe = null;
     }
 }

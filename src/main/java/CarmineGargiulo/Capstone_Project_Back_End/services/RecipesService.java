@@ -138,5 +138,10 @@ public class RecipesService {
         return recipes;
     }
 
+    public void resetIngredients(long id) {
+        Recipe founded = recipesRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
+        founded.setIngredientList(null);
+        recipesRepository.save(founded);
+    }
 
 }
