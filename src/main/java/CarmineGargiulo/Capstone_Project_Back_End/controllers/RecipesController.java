@@ -1,8 +1,10 @@
 package CarmineGargiulo.Capstone_Project_Back_End.controllers;
 
 import CarmineGargiulo.Capstone_Project_Back_End.dto.RecipeResponseDTO;
+import CarmineGargiulo.Capstone_Project_Back_End.entities.Recipe;
 import CarmineGargiulo.Capstone_Project_Back_End.services.RecipesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +17,15 @@ public class RecipesController {
     @Autowired
     private RecipesService recipesService;
 
-    @GetMapping
-    public List<RecipeResponseDTO> getRecipes(@RequestParam(name = "query") String query) {
+    @GetMapping("/search")
+    public List<RecipeResponseDTO> getRecipesByQuery(@RequestParam(name = "query") String query) {
         return recipesService.getRecipesByQuery(query);
+    }
+
+    @GetMapping
+    public Page<Recipe> getRecipes(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "name") String sortBy) {
+        return recipesService.getRecipes(page, sortBy);
     }
 
     @GetMapping("/{recipeReference}")

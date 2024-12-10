@@ -10,6 +10,10 @@ import CarmineGargiulo.Capstone_Project_Back_End.tools.SpoonacularSender;
 import kong.unirest.core.json.JSONArray;
 import kong.unirest.core.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -142,6 +146,12 @@ public class RecipesService {
         Recipe founded = recipesRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
         founded.setIngredientList(null);
         recipesRepository.save(founded);
+    }
+
+    public Page<Recipe> getRecipes(int page, String sortBy) {
+        int size = 12;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return recipesRepository.findAll(pageable);
     }
 
 }

@@ -1,5 +1,7 @@
 package CarmineGargiulo.Capstone_Project_Back_End.tools;
 
+import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
+import CarmineGargiulo.Capstone_Project_Back_End.exceptions.NotFoundException;
 import com.google.gson.Gson;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.JsonNode;
@@ -24,6 +26,7 @@ public class SpoonacularSender {
                 .queryString("includeNutrition", true)
                 .header("x-api-key", this.apiKey)
                 .asJson();
+        if (response.getBody() == null) throw new BadRequestException("Something went wrong");
         return response.getBody().getObject();
     }
 
@@ -33,6 +36,7 @@ public class SpoonacularSender {
                 .queryString("number", 100)
                 .header("x-api-key", this.apiKey)
                 .asJson();
+        if (response.getBody() == null) throw new NotFoundException("No recipe founded");
         return response.getBody().getObject();
     }
 
