@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ProductsRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByReference(long reference);
+
+    boolean existsByReference(long reference);
 }

@@ -118,7 +118,7 @@ public class RecipesService {
                     default:
                         unitToUse = unit;
                 }
-                Product product = productsService.getProductByReference(ingredientId, (JSONObject) o);
+                Product product = productsService.saveProductByJson(ingredientId, (JSONObject) o);
                 Ingredient ingredient = ingredientsService.getIngredientByProductAndQty(product, ingredientAmount,
                         unitToUse);
                 ingredientList.add(ingredient);
