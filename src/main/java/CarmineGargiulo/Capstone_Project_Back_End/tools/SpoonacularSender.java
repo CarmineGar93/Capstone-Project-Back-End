@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class SpoonacularSender {
@@ -54,6 +55,23 @@ public class SpoonacularSender {
         HttpResponse<HashMap> response = Unirest.get("https://api.spoonacular.com/recipes/random")
                 .queryString("number", 12)
                 .header("x-api-key", this.apiKey)
+                .asObject(HashMap.class);
+        return response.getBody();
+    }
+
+    public HashMap getProductsByQuery(String query) {
+        HttpResponse<HashMap> response = Unirest.get("https://api.spoonacular.com/food/ingredients/search")
+                .queryString("query", query)
+                .header("x-api-key", this.apiKey)
+                .asObject(HashMap.class);
+        return response.getBody();
+    }
+
+    public HashMap getRecipesByFilters(Map<String, Object> parameters) {
+        HttpResponse<HashMap> response = Unirest.get("https://api.spoonacular.com/recipes/complexSearch")
+                .header("x-api-key", this.apiKey)
+                .queryString(parameters)
+                .queryString("number", 12)
                 .asObject(HashMap.class);
         return response.getBody();
     }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecipesService {
@@ -152,6 +153,16 @@ public class RecipesService {
         int size = 12;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return recipesRepository.findAll(pageable);
+    }
+
+    public HashMap getFilteredRecipes(String ingredients, String recipeType, String sortBy, Integer time, int offset) {
+        Map<String, Object> queryParams = new HashMap<>();
+        if (ingredients != null) queryParams.put("includeIngredients", ingredients);
+        if (recipeType != null) queryParams.put("type", recipeType);
+        if (sortBy != null) queryParams.put("sort", sortBy);
+        if (time != null) queryParams.put("maxReadyTime", time.intValue());
+        queryParams.put("offset", offset);
+        return spoonacularSender.getRecipesByFilters(queryParams);
     }
 
 }

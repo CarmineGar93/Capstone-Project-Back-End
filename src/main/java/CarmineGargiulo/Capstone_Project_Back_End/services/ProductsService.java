@@ -4,17 +4,22 @@ import CarmineGargiulo.Capstone_Project_Back_End.entities.Product;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.BadRequestException;
 import CarmineGargiulo.Capstone_Project_Back_End.exceptions.NotFoundException;
 import CarmineGargiulo.Capstone_Project_Back_End.repositories.ProductsRepository;
+import CarmineGargiulo.Capstone_Project_Back_End.tools.SpoonacularSender;
 import kong.unirest.core.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class ProductsService {
     @Autowired
     private ProductsRepository productsRepository;
+
+    @Autowired
+    private SpoonacularSender spoonacularSender;
 
     public Product getProductByReference(long reference) {
         return productsRepository.findByReference(reference).orElseThrow(() -> new NotFoundException("Product not " +
@@ -50,5 +55,9 @@ public class ProductsService {
             }
         });
         return commonProducts;
+    }
+
+    public HashMap getProductsByQuery(String query) {
+        return spoonacularSender.getProductsByQuery(query);
     }
 }

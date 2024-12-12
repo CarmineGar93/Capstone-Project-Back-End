@@ -43,4 +43,13 @@ public class RecipesController {
     public void resetIngredients(@PathVariable long recipeId) {
         recipesService.resetIngredients(recipeId);
     }
+
+    @GetMapping("/filter")
+    public HashMap getFilteredRecipes(@RequestParam(name = "ingredients", required = false) String ingredients,
+                                      @RequestParam(name = "type", required = false) String type,
+                                      @RequestParam(name = "sort", required = false) String sort,
+                                      @RequestParam(name = "time", required = false) Integer time,
+                                      @RequestParam(name = "offset") int offset) {
+        return recipesService.getFilteredRecipes(ingredients, type, sort, time, offset);
+    }
 }
