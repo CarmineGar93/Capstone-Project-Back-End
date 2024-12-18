@@ -155,11 +155,11 @@ public class RecipesService {
         return recipesRepository.findAll(pageable);
     }
 
-    public HashMap getFilteredRecipes(String ingredients, String recipeType, String sortBy, Integer time, int offset) {
+    public HashMap getFilteredRecipes(String ingredients, String recipeType, String query, Integer time, int offset) {
         Map<String, Object> queryParams = new HashMap<>();
         if (ingredients != null) queryParams.put("includeIngredients", ingredients);
         if (recipeType != null) queryParams.put("type", recipeType);
-        if (sortBy != null) queryParams.put("sort", sortBy);
+        if (query != null) queryParams.put("query", query);
         if (time != null) queryParams.put("maxReadyTime", time.intValue());
         queryParams.put("offset", offset);
         return spoonacularSender.getRecipesByFilters(queryParams);
